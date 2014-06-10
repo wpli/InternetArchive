@@ -14,10 +14,10 @@ def load_data(dict_path, corpus_path):
 
 def create_model(dictionary, corpus, logger, model_path, num_topics):
 	# assume corpus is a bag of words for now...need to try against tfidf
-	model = models.LdaModel(corpus, id2word=dictionary, alpha='auto', eval_every=10, chunksize=5000, num_topics=num_topics)
+	model = models.LdaModel(corpus, id2word=dictionary, alpha='auto', eval_every=10, chunksize=500, num_topics=num_topics)
 	logger.info('Saving model to disk: {}'.format(model_path))
 	model.save(model_path)
-	return True
+	return model
 
 def get_topic_mixtures(model, corpus, model_path, num_topics):
 	lda_corpus = model[corpus]
@@ -39,7 +39,9 @@ def main(dict_path, corpus_path, model_path, num_topics):
 	logger = logging.getLogger('Archive.LDA')
 	dictionary, corpus = load_data(dict_path, corpus_path)
 	logger.info('Initiate training')
-	model_created = create_model(dictionary, corpus, logger, model_path, num_topics)
+
+        # return the model
+	model = create_model(dictionary, corpus, logger, model_path, num_topics)
 	logger.info('Saving model to disk: {}'.format(model_path))
 	model.save(model_path)
 	get_topic_mixtures(model, corpus, model_path, num_topics)
@@ -47,7 +49,7 @@ def main(dict_path, corpus_path, model_path, num_topics):
 if __name__ == '__main__':
 
 	if len( sys.argv ) < 5:
-		sys.exit('Provide path to training data file (1) and dictionary path (2), model output path (3), number of topics (4)')
+		sys.exit('Provide path to training data file (1) and dictionary path (2), model output path (file prefix) (3), number of topics (4)')
 	corp_path = os.path.join(sys.argv[1])
 	dict_path = os.path.join(sys.argv[2])
 	model_path = os.path.join(sys.argv[3])
