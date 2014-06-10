@@ -40,16 +40,16 @@ def main(dict_path, corpus_path, model_path, num_topics):
 	dictionary, corpus = load_data(dict_path, corpus_path)
 	logger.info('Initiate training')
 	model_created = create_model(dictionary, corpus, logger, model_path, num_topics)
-	#logger.info('Saving model to disk: {}'.format(model_path))
-	#model.save(model_path)
+	logger.info('Saving model to disk: {}'.format(model_path))
+	model.save(model_path)
 	get_topic_mixtures(model, corpus, model_path, num_topics)
 
 if __name__ == '__main__':
-	if sys.argv < 5:
-		sys.exit('Provide path to training data file (1) and dictionary path (2), model output path (3), number of topics (4)')
 
-	dict_path = os.path.join(sys.argv[1])
-	corp_path = os.path.join(sys.argv[2])
+	if len( sys.argv ) < 5:
+		sys.exit('Provide path to training data file (1) and dictionary path (2), model output path (3), number of topics (4)')
+	corp_path = os.path.join(sys.argv[1])
+	dict_path = os.path.join(sys.argv[2])
 	model_path = os.path.join(sys.argv[3])
 	num_topics = int(sys.argv[4])
 
